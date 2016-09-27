@@ -1,16 +1,17 @@
 package com.nosql.mongoteste;
 
 import org.bson.Document;
-
-import com.mongodb.client.MongoDatabase;
-
 import dao.Connector;
+import dao.Finder;
 import exceptions.InvalidDocumentException;
-import finders.EnderecoLocalFinder;
-import finders.LocalFinder;
-import finders.ParceiroFinder;
 import mainquery.validators.EnderecoLocalValidator;
+import mainquery.validators.FlagValidator;
+import mainquery.validators.GrupoEmpresarialValidator;
 import mainquery.validators.LocalValidator;
+import mainquery.validators.ParceiroValidator;
+import names.EnderecoLocalNames;
+import names.LocalNames;
+import names.ParceiroNames;
 
 public class MainQuery {
 
@@ -22,28 +23,43 @@ public class MainQuery {
     }
 
     public void mainQuery() throws InvalidDocumentException {
-	MongoDatabase db = connector.getDb();
+	Finder finder = new Finder(connector);
 
-	// Get all the EnderecoLocal
 	EnderecoLocalValidator enderecoLocalValidator = new EnderecoLocalValidator();
-	EnderecoLocalFinder enderecoLocalFinder = new EnderecoLocalFinder(connector);
-	LocalFinder localFinder = new LocalFinder();
 	LocalValidator localValidator = new LocalValidator();
-	ParceiroFinder parceiroFinder = new ParceiroFinder();
-	
-	for (Document enderecoLocalDocument : enderecoLocalFinder.findAll()) {
+	ParceiroValidator parceiroValidator = new ParceiroValidator();
+	GrupoEmpresarialValidator grupoEmpresarialValidator = new GrupoEmpresarialValidator();
+	FlagValidator flagValidator = new FlagValidator();
+
+	for (Document enderecoLocalDocument : finder.findAll(EnderecoLocalNames.ENDERECOLOCAL)) {
 	    // Validate EnderecoLocal dates
 	    enderecoLocalValidator.setEnderecoLocalDocument(enderecoLocalDocument);
 	    if (!enderecoLocalValidator.isValid())
 		throw new InvalidDocumentException();
 
-	    Document localDocument = localFinder.findFromEnderecoLocal(enderecoLocalDocument);
+	    Document localDocument = finder.findFrom(enderecoLocalDocument, EnderecoLocalNames.LOCAL);
 	    localValidator.setLocalDocument(localDocument);
 	    if (!localValidator.isValid())
 		throw new InvalidDocumentException();
 
-	    Document parceiroDocument = parceiroFinder.findFromLocal(localDocument);
-	    
+	    Document parceiroDocument = finder.findFrom(localDocument, LocalNames.PARCEIRO);
+	    parceiroValidator.setParceiroDocument(parceiroDocument);
+	    if (!parceiroValidator.isValid())
+		throw new InvalidDocumentException();
+
+	    Document grupoEmpresarialDocument = finder.findFrom(parceiroDocument, ParceiroNames.GRUPOEMPRESARIAL);
+	    grupoEmpresarialValidator.setGrupoEmpresarialDocument(grupoEmpresarialDocument);
+	    if (!grupoEmpresarialValidator.isValid())
+		throw new InvalidDocumentException();
+
+	    Document flagDocument = finder.findFrom(parceiroDocument, ParceiroNames.FLAG);
+	    if (flagValidator.isPessoaJuridica())
+		;
+	    else {
+		// ENCONTRAR A INFOCOMPLEMENTAR TAL QUE O IDPARTCEIRO SEJA IGUAL
+		// AO PARCEIRO ATUAL
+	    }
+
 	}
     }
 }

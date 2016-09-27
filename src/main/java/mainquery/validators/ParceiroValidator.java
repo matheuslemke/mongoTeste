@@ -9,7 +9,7 @@ public class ParceiroValidator implements Validator {
     private Document parceiroDocument;
 
     public boolean isValid() {
-	return parceiroDocument.getInteger(ParceiroNames.ATIVO) == 1 ? true : false;
+	return parceiroDocument.getInteger(ParceiroNames.ATIVO) == 1;
     }
 
     public Document getParceiroDocument() {

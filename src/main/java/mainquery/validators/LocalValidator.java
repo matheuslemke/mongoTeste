@@ -9,7 +9,7 @@ public class LocalValidator implements Validator {
     private Document localDocument;
 
     public boolean isValid() {
-	return localDocument.getInteger(LocalNames.ATIVO) == 1 ? true : false;
+	return localDocument.getInteger(LocalNames.ATIVO) == 1;
     }
 
     public Document getLocalDocument() {
