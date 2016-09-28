@@ -65,8 +65,8 @@ public class MainQuery implements MongoQuerier {
 		result.add(defineRow());
 	    } catch (DocumentNotFoundException e) {
 		e.printStackTrace();
-	    } catch (ClassCastException e) {
-		e.printStackTrace();
+	    } catch (ClassCastException e2) {
+
 	    }
 	}
 	return result;
