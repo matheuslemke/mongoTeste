@@ -1,4 +1,4 @@
-package mongo.mainquery;
+package mongo.query;
 
 import java.util.List;
 

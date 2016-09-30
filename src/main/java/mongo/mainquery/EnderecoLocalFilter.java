@@ -7,29 +7,28 @@ import java.util.List;
 import org.bson.Document;
 
 import com.mongodb.client.FindIterable;
+
 import mongo.names.*;
-import util.DateParser;
+import mongo.query.Filter;
+import util.Parser;
 
 public class EnderecoLocalFilter implements Filter {
-    private FindIterable<Document> documents;
+	private FindIterable<Document> documents;
 
-    public void setDocuments(FindIterable<Document> documents) {
-	this.documents = documents;
-    }
-
-    public List<Document> filtrate() {
-	List<Document> filteredList = new LinkedList<Document>();
-	for (Document enderecoLocalDocument : documents) {
-	    Date enderecoLocalDataInicio = DateParser
-		    .toUniversalFormat(enderecoLocalDocument.getString(EnderecoLocalNames.DATAINICIO));
-	    String enderecoLocalDataFimStr = enderecoLocalDocument.getString(EnderecoLocalNames.DATAFIM);
-	    Date enderecoLocalDataFim = enderecoLocalDataFimStr.isEmpty() ? null
-		    : DateParser.toUniversalFormat(enderecoLocalDataFimStr);
-	    Date today = new Date();
-	    if (enderecoLocalDataInicio.before(today)
-		    && (enderecoLocalDataFim == null || enderecoLocalDataFim.after(today)))
-		filteredList.add(enderecoLocalDocument);
+	public void setDocuments(FindIterable<Document> documents) {
+		this.documents = documents;
 	}
-	return filteredList;
-    }
+
+	public List<Document> filtrate() {
+		List<Document> filteredList = new LinkedList<Document>();
+		for (Document enderecoLocalDocument : documents) {
+			Date enderecoLocalDataInicio = Parser.toUniversalFormat(enderecoLocalDocument.getString(EnderecoLocalNames.DATAINICIO));
+			String enderecoLocalDataFimStr = enderecoLocalDocument.getString(EnderecoLocalNames.DATAFIM);
+			Date enderecoLocalDataFim = enderecoLocalDataFimStr.isEmpty() ? null : Parser.toUniversalFormat(enderecoLocalDataFimStr);
+			Date today = new Date();
+			if (enderecoLocalDataInicio.before(today) && (enderecoLocalDataFim == null || enderecoLocalDataFim.after(today)))
+				filteredList.add(enderecoLocalDocument);
+		}
+		return filteredList;
+	}
 }
