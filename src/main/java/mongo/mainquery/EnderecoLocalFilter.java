@@ -20,13 +20,22 @@ public class EnderecoLocalFilter implements Filter {
 	}
 
 	public List<Document> filtrate() {
+		int i = 0;
 		List<Document> filteredList = new LinkedList<Document>();
+		System.err.println("Filtrating");
 		for (Document enderecoLocalDocument : documents) {
-			Date enderecoLocalDataInicio = Parser.toUniversalFormat(enderecoLocalDocument.getString(EnderecoLocalNames.DATAINICIO));
-			String enderecoLocalDataFimStr = enderecoLocalDocument.getString(EnderecoLocalNames.DATAFIM);
-			Date enderecoLocalDataFim = enderecoLocalDataFimStr.isEmpty() ? null : Parser.toUniversalFormat(enderecoLocalDataFimStr);
+			System.out.println(++i);
+			Date enderecoLocalDataInicio = Parser
+					.toUniversalFormat(enderecoLocalDocument
+							.getString(EnderecoLocalNames.DATAINICIO));
+			String enderecoLocalDataFimStr = enderecoLocalDocument
+					.getString(EnderecoLocalNames.DATAFIM);
+			Date enderecoLocalDataFim = enderecoLocalDataFimStr.isEmpty() ? null
+					: Parser.toUniversalFormat(enderecoLocalDataFimStr);
 			Date today = new Date();
-			if (enderecoLocalDataInicio.before(today) && (enderecoLocalDataFim == null || enderecoLocalDataFim.after(today)))
+			if (enderecoLocalDataInicio.before(today)
+					&& (enderecoLocalDataFim == null || enderecoLocalDataFim
+							.after(today)))
 				filteredList.add(enderecoLocalDocument);
 		}
 		return filteredList;

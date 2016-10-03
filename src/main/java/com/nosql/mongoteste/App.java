@@ -2,12 +2,16 @@ package com.nosql.mongoteste;
 
 import mongo.dao.Connector;
 import mongo.mainquery.MainQuery;
+import mongo.names.CidadeNames;
+import mongo.query.DocumentFinder;
 import mongo.query.MongoQueryResult;
 import util.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bson.Document;
 
@@ -21,24 +25,19 @@ import model.GrupoEmpresarial;
 public class App {
 
 	public static void main(String[] args) {
-		Connector connector = new Connector(Constants.getHostnameMongo(), Constants.getPortMongo(), Constants.getDatabaseMongo());
+		Connector connector = new Connector(Constants.getHostnameMongo(),
+				Constants.getPortMongo(), Constants.getDatabaseMongo());
 		connector.openConnection();
-		MongoDatabase db = connector.getDb();
 
-		// MainQuery query = new MainQuery(connector);
-		// // MongoQueryResult result = query.query();
-		// // System.out.println(result.getFieldNames());
-		//
-		// List<Document> result = query.query("PA");
-		// for (Document document : result) {
-		// System.out.println(document);
-		// }
+		MainQuery mainQuery = new MainQuery(connector);
 
-		// for (ArrayList<Object> row : result.getValues()) {
-		// for (Object object : row) {
-		// System.out.println(object.toString());
-		// }
-		// }
+		MongoQueryResult result1 = mainQuery.queryInsideDocsWithFilter();
+
+		MongoQueryResult result2 = mainQuery.queryInsideDocsWithoutFilter();
+
+		List<Document[]> result3 = mainQuery.queryBlockForeach();
+
+		mainQuery.queryIndividualsDocsWithoutFilter();
 
 		// FindIterable<Document> testar = db.getCollection("cidade").find();
 		// Document t = testar.first();
