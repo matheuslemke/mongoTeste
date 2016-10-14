@@ -28,9 +28,10 @@ public class AppToObject {
 		Cidade c = Cidade.toObject(t);
 		System.out.println(c.toString());
 
-		GrupoEmpresarial ge = new GrupoEmpresarial(02, 444846464, "teste inserção",
-				22);
-		MongoCollection<Document> collection = db.getCollection("grupoempresarial");
+		GrupoEmpresarial ge = new GrupoEmpresarial(02, 444846464,
+				"teste inserção", 22);
+		MongoCollection<Document> collection = db
+				.getCollection("grupoempresarial");
 
 		Document teste = Document.parse(ge.toJson());
 		collection.insertOne(teste);
